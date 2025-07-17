@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Malla Curricular - Ingeniería Civil (UC)</title>
+  <style>
+    body {
+      font-family: "Segoe UI", sans-serif;
+      background-color: #f9f9f9;
+      color: #333;
+      padding: 2rem;
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 2rem;
+      justify-content: center;
+    }
+
+    .column {
+      background-color: #ffffff;
+      border-radius: 8px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+      padding: 1rem;
+      width: 300px;
+    }
+
+    .column h2 {
+      font-size: 1.1rem;
+      margin-bottom: 0.5rem;
+      color: #444;
+    }
+
+    .subject {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background-color: #f0f0f0;
+      margin: 0.3rem 0;
+      padding: 0.5rem 0.7rem;
+      border-radius: 6px;
+      cursor: pointer;
+      position: relative;
+      transition: background-color 0.2s ease;
+    }
+
+    .subject.locked {
+      background-color: #e0e0e0;
+      color: #888;
+      cursor: not-allowed;
+    }
+
+    .subject.completed {
+      background-color: #c7eec7;
+      color
