@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Malla Curricular - Ingeniería Civil (UC)</title>
+  <style>
+    body {
+      font-family: "Segoe UI", sans-serif;
+      background-color: #f9f9f9;
+      color: #333;
+      padding: 2rem;
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 2rem;
+      justify-content: center;
+    }
+
+    .column {
+      background-color: #ffffff;
+      border-radius: 8px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+      padding: 1rem;
+      width: 320px;
+    }
+
+    .column h2 {
+      font-size: 1.1rem;
+      margin-bottom: 0.5rem;
+      color: #444;
+    }
+
+    .subject {
+      background-color: #f0f0f0;
+      margin: 0.3rem 0;
+      padding: 0.5rem 0.7rem;
+      border-radius: 6px;
+      cursor: pointer;
+      position: relative;
+      transition: background-color 0.2s ease;
+    }
+
+    .subject.locked {
+      background-color: #e0e0e0;
+      color: #888;
+      cursor: not-allowed;
+    }
+
+    .subject.completed {
+      background-color: #c7eec7;
+      color: #2a5d2a;
+    }
+
+    .tooltip {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      background-color: #444;
+      color: #fff;
+      padding: 0.4rem;
+      font-size: 0.8rem;
+      border-radius: 4px;
+      margin-top: 0.3rem;
+      display: none;
+      z-index: 2;
+    }
+
+    .subject.locked:hover .tooltip {
+      display: block;
+    }
+  </style>
+</head>
+<body>
+  <h1>Malla Curricular - Ingeniería Civil (UC)</h1>
+  <div class="grid" id="curriculum"></div>
+
+  <script>
+    const curriculumData = {
+      "Primer Curso - Semestre 1": {
+        "Curso de admisión": [],
+        "Introducción al Dibujo Técnico": ["Curso de admisión"],
+        "Trigonometría": ["Curso de admisión"],
+        "Álgebra": ["Curso de admisión"],
+        "Geometría Analítica": ["Curso de admisión"],
+        "Introducción a la Ingeniería": ["Curso de admisión"]
+      },
+      "Primer Curso - Semestre 2": {
+        "Dibujo Técnico": ["Introducción al Dibujo Técnico", "Trigonometría", "Álgebra", "Geometría Analítica", "Introducción a la Ingeniería"],
+        "Cálculo 1": ["Introducción al Dibujo Técnico", "Trigonometría", "Álgebra", "Geometría Analítica", "Introducción a la Ingeniería"],
+        "Introducción a la física": ["Introducción al Dibujo Técnico", "Trigonometría", "Álgebra", "Geometría Analítica", "Introducción a la Ingeniería"],
+        "Álgebra Vectorial": ["Introducción al Dibujo Técnico", "Trigonometría", "Álgebra", "Geometría Analítica", "Introducción a la Ingeniería"],
+        "Química General": ["Introducción al Dibujo Técnico", "Trigonometría", "Álgebra", "Geometría Analítica", "Introducción a la Ingeniería"],
+        "Misterio Cristiano 1": ["Introducción al Dibujo Técnico", "Trigonometría", "Álgebra", "Geometría Analítica", "Introducción a la Ingeniería"],
+        "Historia de la Cultura": ["Curso de admisión"],
+        "Introducción a la Sociología": ["Curso de admisión"],
+        "Comunicación Oral y Escrita 2": ["Curso de admisión"],
+        "Antropología Filosófica": ["Curso de admisión"]
+      },
+      "Segundo Curso - Semestre 3": {
+        "Representación Gráfica 1": ["Dibujo Técnico"],
+        "Cálculo 2": ["Cálculo 1"],
+        "Álgebra Lineal": ["Álgebra Vectorial"],
+        "Informática 1": [],
+        "Física 1": ["Cálculo 1", "Introducción a la física", "Álgebra Vectorial"],
+        "Misterio Cristiano 2": ["Misterio Cristiano 1"]
+      },
+      "Segundo Curso - Semestre 4": {
+        "Representación Gráfica 2": ["Informática 1", "Dibujo Técnico"],
+        "Cálculo 3": ["Cálculo 2"],
+        "Ecuaciones Diferenciales": ["Cálculo 2"],
+        "Física 2": ["Física 1"],
+        "Mecánica Racional 1": ["Álgebra Lineal", "Física 1"],
+        "Antropología Cristiana": ["Misterio Cristiano 2"]
+      },
+      "Tercer Curso - Semestre 5": {
+        "Topografía": ["Representación Gráfica 1", "Representación Gráfica 2"],
+        "Física 3": ["Física 1"],
+        "Geología": ["Química General"],
+        "Estática 1": ["Mecánica Racional 1"],
+        "Tecnología de los Materiales 1": ["Química General"],
+        "Economía Política": ["Física 2", "Ecuaciones Diferenciales", "Mecánica Racional 1"],
+        "Ética Fundamental": ["Antropología Cristiana"]
+      },
+      "Tercer Curso - Semestre 6": {
+        "Estadística": ["Cálculo 3"],
+        "Matemática Aplicada": ["Ecuaciones Diferenciales"],
+        "Resistencia de Materiales 1": ["Ecuaciones Diferenciales", "Mecánica Racional 1"],
+        "Estática 2": ["Estática 1"],
+        "Tecnología de los Materiales 2": ["Química General"],
+        "Ética personal": ["Ética Fundamental"]
+      },
+      "Cuarto Curso - Semestre 7": {
+        "Vías de Comunicación 1": ["Topografía"],
+        "Geotecnia 1": ["Geología", "Resistencia de Materiales 1"],
+        "Mecánica de Fluidos": ["Física 3"],
+        "Resistencia de Materiales 2": ["Resistencia de Materiales 1"],
+        "Estática 3": ["Estática 2"],
+        "Tecnología de la Construcción 1": ["Tecnología de los Materiales 1", "Estática 1"],
+        "Ética social 1": ["Ética personal"]
+      },
+      "Cuarto Curso - Semestre 8": {
+        "Vías de comunicación 2": ["Vías de Comunicación 1"],
+        "Geotecnia 2": ["Geotecnia 1"],
+        "Hidráulica Aplicada": ["Mecánica de Fluidos", "Matemática Aplicada"],
+        "Estructura 1": ["Resistencia de Materiales 2"],
+        "Estructura de Mad. y Metálicas": ["Resistencia de Materiales 2", "Estática 2"],
+        "Tecnología de la Construcción 2": ["Tecnología de los Materiales 2"],
+        "Ética Social 2": ["Ética social 1"]
+      },
+      "Quinto Curso - Semestre 9": {
+        "Geotecnia 3": ["Geotecnia 2"],
+        "Hidrología y Obras Hidráulicas": ["Hidráulica Aplicada"],
+        "Estructura 2": ["Estructura 1", "Estática 3"],
+        "Hormigón Pretensado": ["Estructura 1", "Estática 3"],
+        "Tecnología de la Construcción 3": ["Estructura 1", "Tecnología de la Construcción 2"],
+        "Organización de Obras": ["Tecnología de la Construcción 2"],
+        "Ética Profesional": ["Ética Social 2"]
+      },
+      "Quinto Curso - Semestre 10": {
+        "Estructura 3": ["Geotecnia 3", "Estructura 2"],
+        "Puentes": ["Estructura 2", "Hormigón Pretensado"],
+        "Instalaciones Eléctricas": ["Física 2", "Tecnología de la Construcción 2"],
+        "Instalaciones Sanitarias": ["Hidrología y Obras Hidráulicas"],
+        "Ingeniería Económica": ["Organización de Obras", "Economía Política"],
+        "Ingeniería Legal": ["Organización de Obras"]
+      }
+    };
+
+    const completed = JSON.parse(localStorage.getItem("aprobadas") || "[]");
+    const container = document.getElementById("curriculum");
+
+    function isApproved(subject) {
+      return completed.includes(subject);
+    }
+
+    function areRequirementsMet(requires) {
+      return requires.every(req => completed.includes(req));
+    }
+
+    function updateCurriculum() {
+      container.innerHTML = "";
+      for (const [semester, subjects] of Object.entries(curriculumData)) {
+        const column = document.createElement("div");
+        column.className = "column";
+        const title = document.createElement("h2");
+        title.textContent = semester;
+        column.appendChild(title);
+
+        for (const [subject, requirements] of Object.entries(subjects)) {
+          const div = document.createElement("div");
+          div.className = "subject";
+          div.dataset.name = subject;
+
+          const isDone = isApproved(subject);
+          const locked = !areRequirementsMet(requirements);
+
+          if (isDone) {
+            div.classList.add("completed");
+          } else if (locked) {
+            div.classList.add("locked");
+            const tooltip = document.createElement("div");
+            tooltip.className = "tooltip";
+            const missing = requirements.filter(r => !isApproved(r));
+            tooltip.textContent = "Falta: " + missing.join(", ");
+            div.appendChild(tooltip);
+          }
+
+          div.textContent = subject;
+          div.onclick = () => {
+            if (div.classList.contains("locked")) return;
+            if (completed.includes(subject)) {
+              completed.splice(completed.indexOf(subject), 1);
+            } else {
+              completed.push(subject);
+            }
+            localStorage.setItem("aprobadas", JSON.stringify(completed));
+            updateCurriculum();
+          };
+
+          column.appendChild(div);
+        }
+        container.appendChild(column);
+      }
+    }
+
+    updateCurriculum();
+  </script>
+</body>
+</html>
+
+
+    updateCurriculum();
+  </script>
+</body>
+</html>
